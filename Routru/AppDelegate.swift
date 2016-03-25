@@ -12,10 +12,16 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    
+    var drawerContainer: MMDrawerController?
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        buildNavigationDrawerInterface()
+        
+
+        
         return true
     }
 
@@ -39,6 +45,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    }
+    
+    func buildNavigationDrawerInterface() {
+        let mainStoryBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        
+        // Create View Controllers
+        let mainPage: MyTabBarViewController = mainStoryBoard.instantiateViewControllerWithIdentifier("MyTabBarViewController") as! MyTabBarViewController
+                
+        let leftSideMenu: MenuViewController = mainStoryBoard.instantiateViewControllerWithIdentifier("MenuViewController") as! MenuViewController
+        
+        // Create MMDrawerController
+        drawerContainer = MMDrawerController(centerViewController: mainPage, leftDrawerViewController: leftSideMenu)
+        
+        drawerContainer!.openDrawerGestureModeMask = MMOpenDrawerGestureMode.PanningCenterView
+        drawerContainer!.closeDrawerGestureModeMask = MMCloseDrawerGestureMode.PanningCenterView
+        
+        drawerContainer?.setMaximumLeftDrawerWidth(UIScreen.mainScreen().bounds.width / 1.2, animated: true, completion: nil)
+        
+        // Assign MMDrawerController to our window's root ViewController
+        window?.rootViewController = drawerContainer
+        
+        
     }
 
 
